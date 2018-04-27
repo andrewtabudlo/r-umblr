@@ -19,10 +19,6 @@ get '/' do
   erb :index
 end
 
-get '/newpost' do
-  erb :newpost
-end
-
 get '/user/signin' do
   erb :signin, :layout => false
 end
@@ -31,7 +27,7 @@ post '/user/signin' do
   @user = User.find_by(email: params[:email], password: params[:password])
   if @user != nil
     session[:id] = @user.id
-    erb :profile
+    redirect '/' + @user.username
   else   
   # Could not find this user. Redirecting them to the signup page
     redirect '/signup'
@@ -42,15 +38,28 @@ get '/signup' do
   erb :signup, :layout => false
 end
 
-get '/:user' do
+get '/signout' do
+  session.clear
+  redirect '/user/signin'
+end
 
+get '/newpost' do
+  erb :newpost
+end
+
+post '/newpost' do
+  @user = User.find(session[:id])
+  @newpost = Post.create(title: params[:title], body: params[:body], user_id: @user.id)
+  redirect '/' + @user.username
+end
+
+get '/:user' do
+  @user = User.find(session[:id])
+  erb :profile
 end
 
 get '/:user/posts' do
-
+  @user = User.find(session[:id])
+  erb :profile
 end
 
-get '/logout' do
-  session.clear
-  redirect '/signin'
-end
