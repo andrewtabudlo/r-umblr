@@ -16,6 +16,10 @@ configure do
 end
 
 get '/' do
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
+  @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
   erb :index
 end
 
@@ -38,12 +42,19 @@ get '/signup' do
   erb :signup, :layout => false
 end
 
+post '/signup' do
+  @user = User.create(fname: params[:fname], lname: params[:lname], username: params[:username], email: params[:email], password: params[:password])
+  session[:id] = @user.id
+  redirect '/' + @user.username
+end
+
 get '/signout' do
   session.clear
-  redirect '/user/signin'
+  redirect '/'
 end
 
 get '/newpost' do
+  @user = User.find(session[:id])
   erb :newpost
 end
 
@@ -53,10 +64,21 @@ post '/newpost' do
   redirect '/' + @user.username
 end
 
+get '/delete/:post_id' do
+  @user = User.find(session[:id])
+  Post.destroy(params[:post_id])
+  redirect '/' + @user.username
+end
+
 get '/:user' do
   @user = User.find(session[:id])
-  puts @posts = Post.where(user_id: @user.id)
+  @posts = Post.where(user_id: @user.id).order(created_at: :desc).limit(20)
   erb :profile
+end
+
+get '/:user/profile' do
+  @user = User.find(session[:id])
+  erb :user
 end
 
 get '/:user/posts' do
@@ -64,3 +86,9 @@ get '/:user/posts' do
   erb :profile
 end
 
+get '/:user/delete' do
+  Post.where(user_id: session[:id]).destroy_all
+  User.where(username: params[:user]).destroy_all
+  session.clear
+  redirect '/'
+end
