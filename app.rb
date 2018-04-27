@@ -55,6 +55,7 @@ end
 
 get '/:user' do
   @user = User.find(session[:id])
+  puts @posts = Post.where(user_id: @user.id)
   erb :profile
 end
 
