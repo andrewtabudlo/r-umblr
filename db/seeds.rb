@@ -1,6 +1,6 @@
 users = [
-  {first_name: 'Jon', last_name: 'Doe', email: 'e@example.com'},
-  {first_name: 'Jane', last_name: 'Doe', email: 'e@example.com'}
+  {fname: 'Jon', lname: 'Doe', username: 'jdoe', email: 'jondoe@example.com', password: '123123'},
+  {fname: 'Anne', lname: 'Doe', username: 'adoe', email: 'annedoe@example.com', password: '123123'}
 ]
 
 users.each do |u|

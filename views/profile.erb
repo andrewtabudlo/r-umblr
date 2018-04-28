@@ -1,0 +1,41 @@
+<h1>Welcome, <%=@user.fname%> <%=@user.lname%></h1>
+<a href="/newpost"><button class="btn">New Post</button></a>
+<a href="/<%= @user.username %>/profile"><button class="btn">Profile</button></a>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn bg-danger text-white" data-toggle="modal" data-target="#exampleModal">
+    Delete Profile 
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Delete Profile</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      Are you sure you would like to delete all posts and your profile?
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="/<%= @user.username %>/delete"><button class="btn bg-danger">Delete Profile</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+<% @posts.each do |p| %>
+<div class="blog-post">
+  <h2 class="blog-post-title"><%= p.title %></h2>
+  <p class="blog-post-meta">Posted at <%= p.updated_at %> by <a href="#"><%= @user.username %></a></p>
+
+  <p><%= p.body %></p>
+  <hr>
+  <a href="/delete/<%= p.id %>"><button class="btn"><i class="fas fa-trash-alt"></i></button></a>
+  <button class="btn"><i class="fas fa-pencil-alt"></i></button>
+  <button class="btn"><i class="fas fa-paper-plane"></i></button>
+</div><!-- /.blog-post -->
+<% end %>
