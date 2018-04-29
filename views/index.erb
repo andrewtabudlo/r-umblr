@@ -44,22 +44,58 @@
           <h3 class="pb-3 mb-4 font-italic border-bottom">
             Latest Posts
           </h3>
+          <% x = 1 %>
           <% @posts.each do |p| %>
           <div class="blog-post">
             <h2 class="blog-post-title"><%= p.title %></h2>
-            <p class="blog-post-meta">Posted at <%= p.updated_at %> by <a href="#"><%= User.find(p.user_id).username %></a></p>
+            <p class="blog-post-meta">Posted at <%= p.updated_at %> by <a href="/<%= User.find(p.user_id).username %>"><%= User.find(p.user_id).username %></a></p>
 
             <p><%= p.body %></p>
             <hr>
-            <button class="btn"><i class="fas fa-pencil-alt"></i></button>
-            <button class="btn"><i class="fas fa-paper-plane"></i></button>
+            <% if session[:id] != nil && session[:id] == p.user_id%>
+            <a href="/<%= @user.username %>/editpost/<%= p.id %>"><button class="btn"><i class="fas fa-pencil-alt"></i></button></a>
+            <% end %>
+            <button class="btn" type="button" data-toggle="collapse" data-target="#shareButtons<%= x %>" aria-expanded="false" aria-controls="shareButtons"><i class="fas fa-paper-plane"></i></button>
+            <div class="collapse" id="shareButtons<%= x %>">
+              <!-- Social Button HTML -->
+              <!-- Twitter -->
+              <a href="http://twitter.com/share?url=<URL>&text=<TEXT>&via=<VIA>" target="_blank" class="btn share-btn twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <!-- Google Plus -->
+              <a href="https://plus.google.com/share?url=<BTN>" target="_blank" class="btn share-btn google-plus">
+                <i class="fab fa-google-plus"></i>
+              </a>
+              <!-- Facebook -->
+              <a href="http://www.facebook.com/sharer/sharer.php?u=<URL>" target="_blank" class="btn share-btn facebook">
+                <i class="fab fa-facebook"></i>
+              </a>
+              <!-- StumbleUpon (url, title) -->
+              <a href="http://www.stumbleupon.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="btn share-btn stumbleupon">
+                <i class="fab fa-stumbleupon"></i>
+              </a>
+              <!-- Reddit (url, title) -->
+              <a href="http://reddit.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="btn share-btn reddit">
+                <i class="fab fa-reddit"></i>
+              </a>
+              <!-- LinkedIn -->
+              <a href="http://www.linkedin.com/shareArticle?url=<URL>&title=<TITLE>&summary=<SUMMARY>&source=<SOURCE_URL>" target="_blank" class="btn share-btn linkedin">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <!-- Email -->
+              <a href="mailto:?subject=<SUBJECT&body=<BODY>" target="_blank" class="btn share-btn email">
+                <i class="fa fa-envelope"></i>
+              </a>
+            </div>
           </div><!-- /.blog-post -->
+          <% x += 1 %>
           <% end %>
-          
 
           <nav class="blog-pagination">
-            <a class="btn btn-outline-primary" href="#">Older</a>
-            <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
+            <form action="/" method="POST">
+              <a class="btn btn-outline-primary" href="/">Older</a>
+              <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
+            </form>
           </nav>
 
         </div><!-- /.blog-main -->

@@ -2,11 +2,13 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require 'rake'
 require 'pg'
+require 'sendgrid-ruby'
 require_relative './models/User.rb'
 require_relative './models/Post.rb'
 require_relative './models/Tag.rb'
 require_relative './models/Post_Tag.rb'
 require_relative './models/Comment.rb'
+include SendGrid
 
 set :database, {adapter: 'postgresql', database: 'rumblr'}
 
@@ -19,23 +21,50 @@ get '/' do
   if session[:id] != nil
     @user = User.find_by(id: session[:id])
   end
-  @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
+  # @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
+  @posts = Post.all().order(created_at: :desc).limit(20)
   erb :index
+end
+
+post '/' do
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
+  # @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
+  @posts = Post.all().order(created_at: :desc).limit(20).offset(20)
+  erb :index
+end
+
+post '/subscribe' do
+  template = (erb :htmlemail, :layout => false)
+  from = Email.new(email: 'info@rumblr.com')
+  to = Email.new(email: params[:email])
+  subject = 'Thank you for subscribing!'
+  content = Content.new(type: 'text/html', value: template)
+  mail = Mail.new(from, subject, to, content)
+
+  sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+  response = sg.client.mail._('send').post(request_body: mail.to_json)
+  puts response.status_code
+  puts response.body
+  # puts response.parsed_body
+  puts response.headers
+redirect '/'
 end
 
 get '/user/signin' do
   erb :signin, :layout => false
 end
 
-post '/user/signin' do 
+post '/user/signin' do
   @user = User.find_by(email: params[:email], password: params[:password])
   if @user != nil
     session[:id] = @user.id
     redirect '/' + @user.username
-  else   
+  else
   # Could not find this user. Redirecting them to the signup page
     redirect '/signup'
-  end 
+  end
 end
 
 get '/signup' do
@@ -64,6 +93,18 @@ post '/newpost' do
   redirect '/' + @user.username
 end
 
+get '/:user/editpost/:post_id' do
+  @user = User.find(session[:id])
+  @post = Post.find_by(id: params[:post_id])
+  erb :editpost
+end
+
+post '/:user/editpost/:post_id' do
+  @user = User.find(session[:id])
+  Post.find_by(id: params[:post_id]).update(title: params[:title], body: params[:body])
+  redirect '/' + @user.username
+end
+
 get '/delete/:post_id' do
   @user = User.find(session[:id])
   Post.destroy(params[:post_id])
@@ -71,18 +112,25 @@ get '/delete/:post_id' do
 end
 
 get '/:user' do
-  @user = User.find(session[:id])
-  @posts = Post.where(user_id: @user.id).order(created_at: :desc).limit(20)
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
+  @userx = User.find_by(username: params[:user])
+  @posts = Post.where(user_id: @userx.id).order(created_at: :desc).limit(20)
   erb :profile
 end
 
 get '/:user/profile' do
-  @user = User.find(session[:id])
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
   erb :user
 end
 
 get '/:user/posts' do
-  @user = User.find(session[:id])
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
   erb :profile
 end
 
