@@ -21,11 +21,10 @@ get '/' do
   if session[:id] != nil
     @user = User.find_by(id: session[:id])
   end
-  # @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
   @posts = Post.all().order(created_at: :desc).limit(20)
-  @feature1 = Post.find_by(id: 6)
-  @feature2 = Post.find_by(id: 17)
-  @feature3 = Post.find_by(id: 9)
+  @feature1 = Post.find_by(id: 1)
+  @feature2 = Post.find_by(id: 2)
+  @feature3 = Post.find_by(id: 3)
   erb :index
 end
 
@@ -33,7 +32,6 @@ post '/' do
   if session[:id] != nil
     @user = User.find_by(id: session[:id])
   end
-  # @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
   @posts = Post.all().order(created_at: :desc).limit(20).offset(20)
   erb :index
 end
