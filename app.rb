@@ -10,7 +10,7 @@ require_relative './models/Post_Tag.rb'
 require_relative './models/Comment.rb'
 include SendGrid
 
-set :database, {adapter: 'postgresql', database: 'rumblr'}
+# set :database, {adapter: 'postgresql', database: 'rumblr'}
 
 configure do
   enable :sessions unless test?
