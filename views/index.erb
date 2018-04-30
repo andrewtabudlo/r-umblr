@@ -58,6 +58,7 @@
             <hr>
             <% if session[:id] != nil && session[:id] == p.user_id%>
             <a href="/<%= @user.username %>/editpost/<%= p.id %>"><button class="btn"><i class="fas fa-pencil-alt"></i></button></a>
+            <a href="/delete/<%= p.id %>"><button class="btn"><i class="fas fa-trash-alt"></i></button></a>
             <% end %>
             <button class="btn" type="button" data-toggle="collapse" data-target="#shareButtons<%= x %>" aria-expanded="false" aria-controls="shareButtons"><i class="fas fa-paper-plane"></i></button>
             <div class="collapse" id="shareButtons<%= x %>">
@@ -107,7 +108,7 @@
         <aside class="col-md-4 blog-sidebar">
           <div class="p-3 mb-3 bg-light rounded">
             <h4 class="font-italic">About</h4>
-            <p class="mb-0">We are a music review blog for the new age of herokus.</p>
+            <p class="mb-0">We are a blog written in ruby about writing a blog in ruby.</p>
           </div>
 
           <div class="p-3">
