@@ -56,3 +56,6 @@
 .email {
     background: #444444 none repeat scroll 0 0;
 }
+
+a .text-black {
+  color: #000000 !important;

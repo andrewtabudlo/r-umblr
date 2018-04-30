@@ -23,6 +23,9 @@ get '/' do
   end
   # @posts = Post.where(created_at: (Time.now.midnight - 1.day)..Time.now).order(created_at: :desc).limit(20)
   @posts = Post.all().order(created_at: :desc).limit(20)
+  @feature1 = Post.find_by(id: 6)
+  @feature2 = Post.find_by(id: 17)
+  @feature3 = Post.find_by(id: 9)
   erb :index
 end
 
@@ -120,18 +123,19 @@ get '/:user' do
   erb :profile
 end
 
-get '/:user/profile' do
-  if session[:id] != nil
-    @user = User.find_by(id: session[:id])
-  end
-  erb :user
-end
-
 get '/:user/posts' do
   if session[:id] != nil
     @user = User.find_by(id: session[:id])
   end
   erb :profile
+end
+
+get '/:user/posts/:post_id' do
+  if session[:id] != nil
+    @user = User.find_by(id: session[:id])
+  end
+  @post = Post.find_by(id: params[:post_id])
+  erb :post
 end
 
 get '/:user/delete' do

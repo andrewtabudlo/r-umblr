@@ -1,35 +1,54 @@
 <% if session[:id] != nil %>
-<% if @user.id == @userx.id %>
-<h1>Welcome, <%=@user.fname%> <%=@user.lname%></h1>
-<a href="/newpost"><button class="btn">New Post</button></a>
-<a href="/<%= @user.username %>/profile"><button class="btn">Profile</button></a>
+  <% if @user.id == @userx.id %>
+    <h1>Welcome, <%=@user.fname%> <%=@user.lname%></h1>
+    <a href="/newpost"><button class="btn">New Post</button></a>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn bg-danger text-white" data-toggle="modal" data-target="#exampleModal">
-    Delete Profile
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Delete Profile</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn bg-danger text-white" data-toggle="modal" data-target="#exampleModal">
+       Delete Profile
     </button>
-    </div>
-    <div class="modal-body">
-      Are you sure you would like to delete all posts and your profile?
-    </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <a href="/<%= @user.username %>/delete"><button class="btn bg-danger">Delete Profile</button></a>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you would like to delete all posts and your profile?
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <a href="/<%= @user.username %>/delete"><button class="btn bg-danger">Delete Profile</button></a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<% end %>
+    <% else %>
+      <h1><%= @userx.username %>'s Profile</h1>
+      <hr>
+      <ul>
+        <li>Name: <%= @userx.fname %> <%= @userx.lname %></li>
+        <li>Email: <%= @userx.email %></li>
+      </ul>
+      <hr>
+      <h2>Posts by <%= @userx.username %></h2>
+      <hr>
+  <% end %>
+<% else %>
+  <h1><%= @userx.username %>'s Profile</h1>
+  <hr>
+  <ul>
+    <li>Name: <%= @userx.fname %> <%= @userx.lname %></li>
+    <li>Email: <%= @userx.email %></li>
+  </ul>
+  <hr>
+  <h2>Posts by <%= @userx.username %></h2>
+  <hr>
 <% end %>
 
 <% x = 1 %>
@@ -42,7 +61,7 @@
   <hr>
   <% if session[:id] != nil && session[:id] == p.user_id%>
   <a href="/delete/<%= p.id %>"><button class="btn"><i class="fas fa-trash-alt"></i></button></a>
-  <button class="btn"><i class="fas fa-pencil-alt"></i></button>
+  <a href="/<%= @user.username %>/editpost/<%= p.id %>"><button class="btn"><i class="fas fa-pencil-alt"></i></button></a>
   <% end %>
   <button class="btn" type="button" data-toggle="collapse" data-target="#shareButtons<%= x %>" aria-expanded="false" aria-controls="shareButtons"><i class="fas fa-paper-plane"></i></button>
   <div class="collapse" id="shareButtons<%= x %>">
