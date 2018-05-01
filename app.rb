@@ -10,7 +10,7 @@ require_relative './models/Post_Tag.rb'
 require_relative './models/Comment.rb'
 include SendGrid
 
-# set :database, {adapter: 'postgresql', database: 'rumblr'}
+set :database, {adapter: 'postgresql', database: 'rumblr'}
 
 configure do
   enable :sessions unless test?
@@ -22,9 +22,9 @@ get '/' do
     @user = User.find_by(id: session[:id])
   end
   @posts = Post.all().order(created_at: :desc).limit(20)
-  @feature1 = Post.find_by(id: 1)
-  @feature2 = Post.find_by(id: 2)
-  @feature3 = Post.find_by(id: 3)
+  @feature1 = Post.find_by(id: 6)
+  @feature2 = Post.find_by(id: 17)
+  @feature3 = Post.find_by(id: 4)
   erb :index
 end
 
