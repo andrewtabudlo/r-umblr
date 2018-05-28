@@ -1,4 +1,4 @@
-require './app' #or whatever your main app file is called 
+require './app.rb' #or whatever your main app file is called 
 require_relative './models/User.rb'
 require_relative './models/Post.rb'
 require_relative './models/Tag.rb'
